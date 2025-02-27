@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Звук по кнопке</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        #soundButton {
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+        #soundButton img {
+            width: 150px;
+            height: auto;
+            border-radius: 10px; 
+        }
+        #soundButton:hover img {
+            opacity: 0.8; 
+        }
+        #linkText {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <button id="soundButton">
+        <img src="button_image.jpg" alt="Кнопка звука">
+    </button>
+
+    <!-- Текст под ссылкой -->
+    <div id="linkText">
+        <a href="https://t.me/bewalechannel" target="_blank">НАЖМИ</a>
+    </div>
+
+    <script>
+        const audio = new Audio();
+        audio.src = "sound.mp3"; 
+        const soundButton = document.getElementById("soundButton");
+
+        soundButton.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        });
+
+       
+        function changeSound(newSound) {
+            audio.src = newSound;
+            audio.play();
+        }
+    </script>
+</body>
+</html>
