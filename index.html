@@ -24,10 +24,10 @@
         #soundButton img {
             width: 150px;
             height: auto;
-            border-radius: 10px; 
+            border-radius: 10px;
         }
         #soundButton:hover img {
-            opacity: 0.8; 
+            opacity: 0.8;
         }
         #linkText {
             margin-top: 10px;
@@ -44,6 +44,7 @@
     </style>
 </head>
 <body>
+    <!-- Кнопка в виде изображения -->
     <button id="soundButton">
         <img src="button_image.jpg" alt="Кнопка звука">
     </button>
@@ -51,27 +52,51 @@
     <!-- Текст под ссылкой -->
     <div id="linkText">
         <a href="https://t.me/bewalechannel" target="_blank">НАЖМИ</a>
-    </div>
 
     <script>
-        const audio = new Audio();
-        audio.src = "sound.mp3"; 
+        let audioContext;
+        let gainNode;
+        let source;
+
+        // Функция для инициализации аудио
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            gainNode = audioContext.createGain();
+            gainNode.gain.value = 2; // Увеличиваем громкость в 2 раза (можно настроить)
+        }
+
+        // Функция для воспроизведения звука
+        function playSound() {
+            if (!audioContext) {
+                initAudio();
+            }
+
+            // Останавливаем предыдущий звук, если он есть
+            if (source) {
+                source.stop();
+            }
+
+            // Создаем источник звука
+            source = audioContext.createBufferSource();
+            fetch("sound.mp3")
+                .then(response => response.arrayBuffer())
+                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+                .then(audioBuffer => {
+                    source.buffer = audioBuffer;
+                    source.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    source.start(0);
+                })
+                .catch(error => console.error("Ошибка загрузки звука:", error));
+        }
+
+        // Получаем кнопку
         const soundButton = document.getElementById("soundButton");
 
+        // Добавляем обработчик события на кнопку
         soundButton.addEventListener("click", () => {
-            if (audio.paused) {
-                audio.play();
-            } else {
-                audio.pause();
-            }
+            playSound();
         });
-
-       
-        function changeSound(newSound) {
-            audio.src = newSound;
-            audio.volume = 1;
-            audio.play();
-        }
     </script>
 </body>
 </html>
